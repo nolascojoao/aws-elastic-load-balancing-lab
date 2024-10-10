@@ -14,11 +14,16 @@ Use the Elastic Load Balancing (ELB) and Amazon EC2 Auto Scaling to load balance
 ---
 
 ## Step 1: Create a VPC:
+#### VPC:
 ```bash
 aws ec2 create-vpc \
   --cidr-block 10.0.0.0/16 \
   --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=ALB-Lab-VPC}]'
 ```
+
+<div align="center">
+  <img src="screenshot/1.png" width=""/>
+</div>
 
 ---
 
@@ -32,6 +37,11 @@ aws ec2 create-subnet \
   --availability-zone <availability-zone-1> \
   --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=Public-Subnet-A}]'
 ```
+
+<div align="center">
+  <img src="screenshot/2.1.png" width=""/>
+</div>
+
 - Availability Zone 2 - Public Subnet B:
 ```bash
 aws ec2 create-subnet \
@@ -40,6 +50,11 @@ aws ec2 create-subnet \
   --availability-zone <availability-zone-2> \
   --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=Public-Subnet-B}]'
 ```
+
+<div align="center">
+  <img src="screenshot/2.2.png" width=""/>
+</div>
+
 #### Private Subnets
 - Availability Zone 1 - Private Subnet A:
 ```bash
@@ -49,6 +64,11 @@ aws ec2 create-subnet \
   --availability-zone <availability-zone-1> \
   --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=Private-Subnet-A}]'
 ```
+
+<div align="center">
+  <img src="screenshot/2.3.png" width=""/>
+</div>
+
 - Availability Zone 2 - Private Subnet B:
 ```bash
 aws ec2 create-subnet \
@@ -58,9 +78,14 @@ aws ec2 create-subnet \
   --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=Private-Subnet-B}]'
 ```
 
+<div align="center">
+  <img src="screenshot/2.4.png" width=""/>
+</div>
+
 ---
 
 ## Step 3: Create an Internet Gateway
+#### Internet Gateway
 ```bash
 aws ec2 create-internet-gateway \
   --tag-specifications 'ResourceType=internet-gateway,Tags=[{Key=Name,Value=ALB-Lab-Internet-Gateway}]'
@@ -72,14 +97,24 @@ aws ec2 attach-internet-gateway \
   --internet-gateway-id <internet-gateway-id>
 ```
 
+<div align="center">
+  <img src="screenshot/3.0.png" width=""/>
+</div>
+
 ---
 
 ## Step 4: Create a Route Table and Routes for Public Subnets
+#### Public Route Table
 ```bash
 aws ec2 create-route-table \
   --vpc-id <vpc-id> \
   --tag-specifications 'ResourceType=route-table,Tags=[{Key=Name,Value=Public-Route-Table}]'
 ```
+
+<div align="center">
+  <img src="screenshot/4.1.png" width=""/>
+</div>
+
 - Create a route to the Internet Gateway:
 ```bash
 aws ec2 create-route \
@@ -87,18 +122,32 @@ aws ec2 create-route \
   --destination-cidr-block 0.0.0.0/0 \
   --gateway-id <internet-gateway-id>
 ```
+
+<div align="center">
+  <img src="screenshot/4.2.png" width=""/>
+</div>
+
 - Associate with Public Subnet A:
 ```bash
 aws ec2 associate-route-table \
   --subnet-id <public-subnetA-id> \
   --route-table-id <route-table-id>
 ```
+
+<div align="center">
+  <img src="screenshot/4.3.png" width=""/>
+</div>
+
 - Associate with Public Subnet B:
 ```bash
 aws ec2 associate-route-table \
   --subnet-id <public-subnetB-id> \
   --route-table-id <route-table-id>
 ```
+
+<div align="center">
+  <img src="screenshot/4.4.png" width=""/>
+</div>
 
 ---
 
@@ -133,6 +182,10 @@ aws ec2 authorize-security-group-ingress \
   --protocol tcp --port 80 \
   --source-group <ALB-security-group-id>
 ```
+
+<div align="center">
+  <img src="screenshot/5.png" width=""/>
+</div>
 
 ---
 
