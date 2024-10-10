@@ -1,7 +1,7 @@
 # AWS Application Load Balancer Lab *(IN PROGRESS)*
 
 <div align="center">
-  <img src="screenshot/architecture.png" width=""/>
+  <img src="screenshot/architecture.PNG" width=""/>
 </div>
 
 ## Overview
@@ -22,7 +22,7 @@ aws ec2 create-vpc \
 ```
 
 <div align="center">
-  <img src="screenshot/1.png" width=""/>
+  <img src="screenshot/1.PNG" width=""/>
 </div>
 
 ---
@@ -39,7 +39,7 @@ aws ec2 create-subnet \
 ```
 
 <div align="center">
-  <img src="screenshot/2.1.png" width=""/>
+  <img src="screenshot/2.1.PNG" width=""/>
 </div>
 
 - Availability Zone 2 - Public Subnet B:
@@ -52,7 +52,7 @@ aws ec2 create-subnet \
 ```
 
 <div align="center">
-  <img src="screenshot/2.2.png" width=""/>
+  <img src="screenshot/2.2.PNG" width=""/>
 </div>
 
 #### Private Subnets
@@ -66,7 +66,7 @@ aws ec2 create-subnet \
 ```
 
 <div align="center">
-  <img src="screenshot/2.3.png" width=""/>
+  <img src="screenshot/2.3.PNG" width=""/>
 </div>
 
 - Availability Zone 2 - Private Subnet B:
@@ -79,7 +79,7 @@ aws ec2 create-subnet \
 ```
 
 <div align="center">
-  <img src="screenshot/2.4.png" width=""/>
+  <img src="screenshot/2.4.PNG" width=""/>
 </div>
 
 ---
@@ -98,7 +98,7 @@ aws ec2 attach-internet-gateway \
 ```
 
 <div align="center">
-  <img src="screenshot/3.0.png" width=""/>
+  <img src="screenshot/3.0.PNG" width=""/>
 </div>
 
 ---
@@ -112,7 +112,7 @@ aws ec2 create-route-table \
 ```
 
 <div align="center">
-  <img src="screenshot/4.1.png" width=""/>
+  <img src="screenshot/4.1.PNG" width=""/>
 </div>
 
 - Create a route to the Internet Gateway:
@@ -124,7 +124,7 @@ aws ec2 create-route \
 ```
 
 <div align="center">
-  <img src="screenshot/4.2.png" width=""/>
+  <img src="screenshot/4.2.PNG" width=""/>
 </div>
 
 - Associate with Public Subnet A:
@@ -135,7 +135,7 @@ aws ec2 associate-route-table \
 ```
 
 <div align="center">
-  <img src="screenshot/4.3.png" width=""/>
+  <img src="screenshot/4.3.PNG" width=""/>
 </div>
 
 - Associate with Public Subnet B:
@@ -146,7 +146,7 @@ aws ec2 associate-route-table \
 ```
 
 <div align="center">
-  <img src="screenshot/4.4.png" width=""/>
+  <img src="screenshot/4.4.PNG" width=""/>
 </div>
 
 ---
@@ -184,7 +184,7 @@ aws ec2 authorize-security-group-ingress \
 ```
 
 <div align="center">
-  <img src="screenshot/5.png" width=""/>
+  <img src="screenshot/5.PNG" width=""/>
 </div>
 
 ---
