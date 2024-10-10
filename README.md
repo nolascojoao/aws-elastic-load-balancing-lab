@@ -165,10 +165,15 @@ aws ec2 create-launch-template \
   --launch-template-name my-template \
   --version-description v1 \
   --launch-template-data '{
-  "ImageId": "<ami-id>",
-  "InstanceType": "t2.micro",
-  "SecurityGroupIds": ["<EC2-security-group-id>"],
-  "KeyName": "<key-name>"
+    "ImageId": "<ami-id>",
+    "InstanceType": "t2.micro",
+    "SecurityGroupIds": ["<EC2-security-group-id>"],
+    "KeyName": "<key-name>",
+    "UserData": "'$(echo -n "#!/bin/bash
+yum -y install httpd
+systemctl start httpd
+systemctl enable httpd
+echo \"<html><h1>Welcome to My Web Server!</h1></html>\" > /var/www/html/index.html")'"
 }'
 ```
 - Create an Auto Scaling Group:
