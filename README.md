@@ -15,7 +15,9 @@ Use the Elastic Load Balancing (ELB) and Amazon EC2 Auto Scaling to load balance
 
 ## Step 1: Create a VPC:
 ```bash
-aws ec2 create-vpc --cidr-block 10.0.0.0/16
+aws ec2 create-vpc \
+  --cidr-block 10.0.0.0/16 \
+  --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=ALB-Lab-VPC}]'
 ```
 
 ---
@@ -27,14 +29,16 @@ aws ec2 create-vpc --cidr-block 10.0.0.0/16
 aws ec2 create-subnet \
   --vpc-id <vpc-id> \
   --cidr-block 10.0.0.0/24 \
-  --availability-zone <availability-zone-1>
+  --availability-zone <availability-zone-1> \
+  --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=Public-Subnet-A}]'
 ```
 - Availability Zone 2 - Public Subnet B:
 ```bash
 aws ec2 create-subnet \
   --vpc-id <vpc-id> \
   --cidr-block 10.0.2.0/24 \
-  --availability-zone <availability-zone-2>
+  --availability-zone <availability-zone-2> \
+  --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=Public-Subnet-B}]'
 ```
 #### Private Subnets
 - Availability Zone 1 - Private Subnet A:
@@ -42,21 +46,24 @@ aws ec2 create-subnet \
 aws ec2 create-subnet \
   --vpc-id <vpc-id> \
   --cidr-block 10.0.1.0/24 \
-  --availability-zone <availability-zone-1>
+  --availability-zone <availability-zone-1> \
+  --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=Private-Subnet-A}]'
 ```
 - Availability Zone 2 - Private Subnet B:
 ```bash
 aws ec2 create-subnet \
   --vpc-id <vpc-id> \
   --cidr-block 10.0.3.0/24 \
-  --availability-zone <availability-zone-2>
+  --availability-zone <availability-zone-2> \
+  --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=Private-Subnet-B}]'
 ```
 
 ---
 
 ## Step 3: Create an Internet Gateway
 ```bash
-aws ec2 create-internet-gateway
+aws ec2 create-internet-gateway \
+  --tag-specifications 'ResourceType=internet-gateway,Tags=[{Key=Name,Value=ALB-Lab-Internet-Gateway}]'
 ```
 - Attach the Internet Gateway to the VPC:
 ```bash
@@ -69,7 +76,9 @@ aws ec2 attach-internet-gateway \
 
 ## Step 4: Create a Route Table and Routes for Public Subnets
 ```bash
-aws ec2 create-route-table --vpc-id <vpc-id>
+aws ec2 create-route-table \
+  --vpc-id <vpc-id> \
+  --tag-specifications 'ResourceType=route-table,Tags=[{Key=Name,Value=Public-Route-Table}]'
 ```
 - Create a route to the Internet Gateway:
 ```bash
@@ -99,7 +108,8 @@ aws ec2 associate-route-table \
 aws ec2 create-security-group \
   --group-name ALB-SecurityGroup \
   --description "ALB Security Group" \
-  --vpc-id <vpc-id>
+  --vpc-id <vpc-id> \
+  --tag-specifications 'ResourceType=security-group,Tags=[{Key=Name,Value=ALB-SecurityGroup}]'
 ```
 - Add inbound rules for HTTP (port 80):
 ```bash
@@ -113,7 +123,8 @@ aws ec2 authorize-security-group-ingress \
 aws ec2 create-security-group \
   --group-name EC2-SecurityGroup \
   --description "EC2 Security Group" \
-  --vpc-id <vpc-id>
+  --vpc-id <vpc-id> \
+  --tag-specifications 'ResourceType=security-group,Tags=[{Key=Name,Value=EC2-SecurityGroup}]'
 ```
 - Allow traffic from the ALB:
 ```bash
@@ -132,7 +143,8 @@ aws elbv2 create-load-balancer \
   --name my-load-balancer \
   --subnets <public-subnetA-id> <public-subnetB-id> \
   --security-groups <ALB-security-group-id> \
-  --scheme internet-facing
+  --scheme internet-facing \
+  --tags Key=Name,Value=My-ALB
 ```
 
 ---
@@ -142,7 +154,8 @@ aws elbv2 create-load-balancer \
 aws elbv2 create-target-group \
   --name my-target-group \
   --protocol HTTP --port 80 \
-  --vpc-id <vpc-id>
+  --vpc-id <vpc-id> \
+  --tags Key=Name,Value=My-Target-Group
 ```
 
 ---
@@ -174,7 +187,8 @@ yum -y install httpd
 systemctl start httpd
 systemctl enable httpd
 echo \"<html><h1>Welcome to My Web Server!</h1></html>\" > /var/www/html/index.html")'"
-}'
+  }' \
+  --tag-specifications 'ResourceType=launch-template,Tags=[{Key=Name,Value=My-Launch-Template}]'
 ```
 - Create an Auto Scaling Group:
 ```bash
@@ -184,7 +198,8 @@ aws autoscaling create-auto-scaling-group \
   --min-size 1 \
   --max-size 3 \
   --desired-capacity 2 \
-  --vpc-zone-identifier "<private-subnetA-id>,<private-subnetB-id>"
+  --vpc-zone-identifier "<private-subnetA-id>,<private-subnetB-id>" \
+  --tags Key=Name,Value=My-Auto-Scaling-Group
 ```
 - Attach the Auto Scaling Group to the Target Group:
 ```bash
