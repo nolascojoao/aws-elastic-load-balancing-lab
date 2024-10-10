@@ -1,7 +1,7 @@
 # AWS Application Load Balancer Lab *(IN PROGRESS)*
 
 <div align="center">
-  <img src="screenshot/architecture.PNG" width=""/>
+  <img src="screenshot/architecture.png" width=""/>
 </div>
 
 ## Overview
@@ -14,7 +14,7 @@ Use the Elastic Load Balancing (ELB) and Amazon EC2 Auto Scaling to load balance
 ---
 
 ## Step 1: Create a VPC:
-#### VPC:
+- VPC:
 ```bash
 aws ec2 create-vpc \
   --cidr-block 10.0.0.0/16 \
@@ -85,7 +85,7 @@ aws ec2 create-subnet \
 ---
 
 ## Step 3: Create an Internet Gateway
-#### Internet Gateway
+- Internet Gateway
 ```bash
 aws ec2 create-internet-gateway \
   --tag-specifications 'ResourceType=internet-gateway,Tags=[{Key=Name,Value=ALB-Lab-Internet-Gateway}]'
@@ -104,7 +104,7 @@ aws ec2 attach-internet-gateway \
 ---
 
 ## Step 4: Create a Route Table and Routes for Public Subnets
-#### Public Route Table
+- Public Route Table
 ```bash
 aws ec2 create-route-table \
   --vpc-id <vpc-id> \
