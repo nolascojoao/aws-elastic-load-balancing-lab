@@ -1,5 +1,18 @@
 # AWS Application Load Balancer Lab *(IN PROGRESS)*
 
+<div align="center">
+  <img src="screenshot/architecture.png" width=""/>
+</div>
+
+## Overview
+Use the Elastic Load Balancing (ELB) and Amazon EC2 Auto Scaling to load balance and automatically scale the infrastructure
+
+---
+⚠️ **Attention:**
+- All the tasks will be completed via the command line using AWS CLI. Ensure you have the necessary permissions. [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- Charges may apply for completing this lab. [AWS Pricing](https://aws.amazon.com/pricing/)
+---
+
 ## Step 1: Create a VPC:
 ```bash
 aws ec2 create-vpc --cidr-block 10.0.0.0/16
