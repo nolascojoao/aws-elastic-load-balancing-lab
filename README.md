@@ -225,39 +225,47 @@ aws elbv2 create-listener \
 ---
 
 ## Step 9: Launch EC2 Instances with Auto Scaling
-- Create a Launch Template:
+- Create `userdata.sh`
 ```bash
-aws ec2 create-launch-template \
-  --launch-template-name my-template \
-  --version-description v1 \
-  --launch-template-data '{
-    "ImageId": "<ami-id>",
-    "InstanceType": "t2.micro",
-    "SecurityGroupIds": ["<EC2-security-group-id>"],
-    "KeyName": "<key-name>",
-    "UserData": "'$(echo -n "#!/bin/bash
+nano userdata.sh
+```
+- Paste and save the script below into userdata.sh:
+```bash
+#!/bin/bash
 yum -y install httpd
 systemctl start httpd
 systemctl enable httpd
-echo \"<html><h1>Welcome to My Web Server!</h1></html>\" > /var/www/html/index.html")'"
-  }' \
-  --tag-specifications 'ResourceType=launch-template,Tags=[{Key=Name,Value=My-Launch-Template}]'
+echo "<html><h1>Welcome to My Web Server!</h1></html>" > /var/www/html/index.html
+```
+- Create a Launch Template:
+```bash
+aws ec2 create-launch-template \
+  --launch-template-name <launch-template-name> \
+  --version-description v1 \
+  --launch-template-data "{
+    \"ImageId\": \"ami-0ebfd941bbafe70c6\",
+    \"InstanceType\": \"t2.micro\",
+    \"SecurityGroupIds\": [\"ec2-security-group-id\"],
+    \"KeyName\": \"<your-key-pair>\",
+    \"UserData\": \"$(base64 -w 0 userdata.sh)\"
+  }" \
+  --tag-specifications 'ResourceType=launch-template,Tags=[{Key=Name,Value=Lab-Launch-Template}]'
 ```
 - Create an Auto Scaling Group:
 ```bash
 aws autoscaling create-auto-scaling-group \
-  --auto-scaling-group-name my-auto-scaling-group \
-  --launch-template LaunchTemplateName=my-template,Version=1 \
-  --min-size 1 \
-  --max-size 3 \
-  --desired-capacity 2 \
+  --auto-scaling-group-name <my-auto-scaling-group> \
+  --launch-template LaunchTemplateName=<my-template>,Version=<1> \
+  --min-size <1> \
+  --max-size <3> \
+  --desired-capacity <2> \
   --vpc-zone-identifier "<private-subnetA-id>,<private-subnetB-id>" \
-  --tags Key=Name,Value=My-Auto-Scaling-Group
+  --tags Key=Name,Value=<My-Auto-Scaling-Group>
 ```
 - Attach the Auto Scaling Group to the Target Group:
 ```bash
 aws autoscaling attach-load-balancer-target-groups \
-  --auto-scaling-group-name my-auto-scaling-group \
+  --auto-scaling-group-name <my-auto-scaling-group> \
   --target-group-arns <target-group-arn>
 ```
 
