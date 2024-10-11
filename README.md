@@ -200,6 +200,10 @@ aws elbv2 create-load-balancer \
   --tags Key=Name,Value=My-ALB
 ```
 
+<div align="center">
+  <img src="screenshot/6.PNG" width=""/>
+</div>
+
 ---
 
 ## Step 7: Create a Target Group for EC2 Instances
@@ -210,6 +214,10 @@ aws elbv2 create-target-group \
   --vpc-id <vpc-id> \
   --tags Key=Name,Value=My-Target-Group
 ```
+
+<div align="center">
+  <img src="screenshot/7.PNG" width=""/>
+</div>
 
 ---
 
@@ -222,6 +230,10 @@ aws elbv2 create-listener \
   --default-actions Type=forward,TargetGroupArn=<target-group-arn>
 ```
 
+<div align="center">
+  <img src="screenshot/8.PNG" width=""/>
+</div>
+
 ---
 
 ## Step 9: Launch EC2 Instances with Auto Scaling
@@ -229,6 +241,11 @@ aws elbv2 create-listener \
 ```bash
 nano userdata.sh
 ```
+
+<div align="center">
+  <img src="screenshot/9.0.PNG" width=""/>
+</div>
+
 - Paste and save the script below into userdata.sh:
 ```bash
 #!/bin/bash
@@ -237,6 +254,11 @@ systemctl start httpd
 systemctl enable httpd
 echo "<html><h1>Welcome to My Web Server!</h1></html>" > /var/www/html/index.html
 ```
+
+<div align="center">
+  <img src="screenshot/9.1.PNG" width=""/>
+</div>
+
 - Create a Launch Template:
 ```bash
 aws ec2 create-launch-template \
@@ -251,6 +273,11 @@ aws ec2 create-launch-template \
   }" \
   --tag-specifications 'ResourceType=launch-template,Tags=[{Key=Name,Value=Lab-Launch-Template}]'
 ```
+
+<div align="center">
+  <img src="screenshot/9.2.PNG" width=""/>
+</div>
+
 - Create an Auto Scaling Group:
 ```bash
 aws autoscaling create-auto-scaling-group \
@@ -262,12 +289,21 @@ aws autoscaling create-auto-scaling-group \
   --vpc-zone-identifier "<private-subnetA-id>,<private-subnetB-id>" \
   --tags Key=Name,Value=<My-Auto-Scaling-Group>
 ```
+
+<div align="center">
+  <img src="screenshot/9.3.PNG" width=""/>
+</div>
+
 - Attach the Auto Scaling Group to the Target Group:
 ```bash
 aws autoscaling attach-load-balancer-target-groups \
   --auto-scaling-group-name <my-auto-scaling-group> \
   --target-group-arns <target-group-arn>
 ```
+
+<div align="center">
+  <img src="screenshot/9.4.PNG" width=""/>
+</div>
 
 ---
 
