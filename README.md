@@ -1,7 +1,7 @@
-# AWS Application Load Balancer Lab *(IN PROGRESS)*
+# AWS Application Load Balancer Lab 
 
 <div align="center">
-  <img src="screenshot/architecture.png" width=""/>
+  <img src="screenshot/architecture.png"/>
 </div>
 
 ## Overview
@@ -22,7 +22,7 @@ aws ec2 create-vpc \
 ```
 
 <div align="center">
-  <img src="screenshot/1.PNG" width=""/>
+  <img src="screenshot/1.PNG"/>
 </div>
 
 ---
@@ -39,7 +39,7 @@ aws ec2 create-subnet \
 ```
 
 <div align="center">
-  <img src="screenshot/2.1.PNG" width=""/>
+  <img src="screenshot/2.1.PNG"/>
 </div>
 
 - Availability Zone 2 - Public Subnet B:
@@ -52,7 +52,7 @@ aws ec2 create-subnet \
 ```
 
 <div align="center">
-  <img src="screenshot/2.2.PNG" width=""/>
+  <img src="screenshot/2.2.PNG"/>
 </div>
 
 #### Private Subnets
@@ -66,7 +66,7 @@ aws ec2 create-subnet \
 ```
 
 <div align="center">
-  <img src="screenshot/2.3.PNG" width=""/>
+  <img src="screenshot/2.3.PNG"/>
 </div>
 
 - Availability Zone 2 - Private Subnet B:
@@ -79,7 +79,7 @@ aws ec2 create-subnet \
 ```
 
 <div align="center">
-  <img src="screenshot/2.4.PNG" width=""/>
+  <img src="screenshot/2.4.PNG"/>
 </div>
 
 ---
@@ -98,12 +98,12 @@ aws ec2 attach-internet-gateway \
 ```
 
 <div align="center">
-  <img src="screenshot/3.0.PNG" width=""/>
+  <img src="screenshot/3.0.PNG"/>
 </div>
 
 ---
 
-## Step 4: Create a Route Table and Routes for Public Subnets
+## Step 4: Create Route Tables 
 - Public Route Table
 ```bash
 aws ec2 create-route-table \
@@ -112,41 +112,75 @@ aws ec2 create-route-table \
 ```
 
 <div align="center">
-  <img src="screenshot/4.1.PNG" width=""/>
+  <img src="screenshot/4.1.PNG"/>
 </div>
 
 - Create a route to the Internet Gateway:
 ```bash
 aws ec2 create-route \
-  --route-table-id <route-table-id> \
+  --route-table-id <public-route-table-id> \
   --destination-cidr-block 0.0.0.0/0 \
   --gateway-id <internet-gateway-id>
 ```
 
 <div align="center">
-  <img src="screenshot/4.2.PNG" width=""/>
+  <img src="screenshot/4.2.PNG"/>
 </div>
 
 - Associate with Public Subnet A:
 ```bash
 aws ec2 associate-route-table \
   --subnet-id <public-subnetA-id> \
-  --route-table-id <route-table-id>
+  --route-table-id <public-route-table-id>
 ```
 
 <div align="center">
-  <img src="screenshot/4.3.PNG" width=""/>
+  <img src="screenshot/4.3.PNG"/>
 </div>
 
 - Associate with Public Subnet B:
 ```bash
 aws ec2 associate-route-table \
   --subnet-id <public-subnetB-id> \
-  --route-table-id <route-table-id>
+  --route-table-id <public-route-table-id>
 ```
 
 <div align="center">
-  <img src="screenshot/4.4.PNG" width=""/>
+  <img src="screenshot/4.4.PNG"/>
+</div>
+
+#
+
+- Private Route Table
+```bash
+aws ec2 create-route-table \
+  --vpc-id <vpc-id> \
+  --tag-specifications 'ResourceType=route-table,Tags=[{Key=Name,Value=Private-Route-Table}]'
+```
+
+<div align="center">
+  <img src="screenshot/pr1.PNG"/>
+</div>
+
+- Associate with Private Subnet A:
+```bash
+aws ec2 associate-route-table \
+  --subnet-id <private-subnetA-id> \
+  --route-table-id <private-route-table-id>
+```
+
+<div align="center">
+  <img src="screenshot/pr2.PNG"/>
+</div>
+
+- Associate with Private Subnet B:
+```bash
+aws ec2 associate-route-table \
+  --subnet-id <private-subnetB-id> \
+  --route-table-id <private-route-table-id>
+```
+<div align="center">
+  <img src="screenshot/pr3.PNG"/>
 </div>
 
 ---
@@ -184,7 +218,7 @@ aws ec2 authorize-security-group-ingress \
 ```
 
 <div align="center">
-  <img src="screenshot/5.PNG" width=""/>
+  <img src="screenshot/5.PNG"/>
 </div>
 
 ---
@@ -201,7 +235,7 @@ aws elbv2 create-load-balancer \
 ```
 
 <div align="center">
-  <img src="screenshot/6.PNG" width=""/>
+  <img src="screenshot/6.PNG"/>
 </div>
 
 ---
@@ -216,7 +250,7 @@ aws elbv2 create-target-group \
 ```
 
 <div align="center">
-  <img src="screenshot/7.PNG" width=""/>
+  <img src="screenshot/7.PNG"/>
 </div>
 
 ---
@@ -231,7 +265,7 @@ aws elbv2 create-listener \
 ```
 
 <div align="center">
-  <img src="screenshot/8.PNG" width=""/>
+  <img src="screenshot/8.PNG"/>
 </div>
 
 ---
@@ -243,7 +277,7 @@ nano userdata.sh
 ```
 
 <div align="center">
-  <img src="screenshot/9.0.PNG" width=""/>
+  <img src="screenshot/9.0.PNG"/>
 </div>
 
 - Paste and save the script below into userdata.sh:
@@ -256,7 +290,7 @@ echo "<html><h1>Welcome to My Web Server!</h1></html>" > /var/www/html/index.htm
 ```
 
 <div align="center">
-  <img src="screenshot/9.1.PNG" width=""/>
+  <img src="screenshot/9.1.PNG"/>
 </div>
 
 - Create a Launch Template:
@@ -275,7 +309,7 @@ aws ec2 create-launch-template \
 ```
 
 <div align="center">
-  <img src="screenshot/9.2.PNG" width=""/>
+  <img src="screenshot/9.2.PNG"/>
 </div>
 
 - Create an Auto Scaling Group:
@@ -291,7 +325,7 @@ aws autoscaling create-auto-scaling-group \
 ```
 
 <div align="center">
-  <img src="screenshot/9.3.PNG" width=""/>
+  <img src="screenshot/9.3.PNG"/>
 </div>
 
 - Attach the Auto Scaling Group to the Target Group:
@@ -302,7 +336,7 @@ aws autoscaling attach-load-balancer-target-groups \
 ```
 
 <div align="center">
-  <img src="screenshot/9.4.PNG" width=""/>
+  <img src="screenshot/9.4.PNG"/>
 </div>
 
 ---
