@@ -185,7 +185,43 @@ aws ec2 associate-route-table \
 
 ---
 
-## Step 5: Create Security Groups
+## Step 5: Create NAT Gateway
+
+- Allocate an Elastic IP
+```bash
+aws ec2 allocate-address --domain vpc
+```
+
+<div align="center">
+  <img src="screenshot/nat1.PNG"/>
+</div>
+
+- Create a NAT Gateway in the public subnet A
+```bash
+aws ec2 create-nat-gateway \
+  --subnet-id <public-subnetA-id> \
+  --allocation-id <allocation-id>
+```
+
+<div align="center">
+  <img src="screenshot/nat2.PNG"/>
+</div>
+
+- Create a route to the NAT for the private route table
+```bash
+aws ec2 create-route \
+  --route-table-id <private-route-table-id>
+  --destination-cidr-block 0.0.0.0/0 \
+  --nat-gateway-id <nat-gateway-id>
+```
+
+<div align="center">
+  <img src="screenshot/nat3.PNG"/>
+</div>
+
+---
+
+## Step 6: Create Security Groups
 - Security Group for Application Load Balancer (ALB):
 ```bash
 aws ec2 create-security-group \
@@ -223,7 +259,7 @@ aws ec2 authorize-security-group-ingress \
 
 ---
 
-## Step 6: Create an Application Load Balancer
+## Step 7: Create an Application Load Balancer
 - Create the ALB in the public subnets:
 ```bash
 aws elbv2 create-load-balancer \
@@ -240,7 +276,7 @@ aws elbv2 create-load-balancer \
 
 ---
 
-## Step 7: Create a Target Group for EC2 Instances
+## Step 8: Create a Target Group for EC2 Instances
 ```bash
 aws elbv2 create-target-group \
   --name my-target-group \
@@ -255,7 +291,7 @@ aws elbv2 create-target-group \
 
 ---
 
-## Step 8: Create a Listener for the Load Balancer
+## Step 9: Create a Listener for the Load Balancer
 ```bash
 aws elbv2 create-listener \
   --load-balancer-arn <load-balancer-arn> \
@@ -270,7 +306,7 @@ aws elbv2 create-listener \
 
 ---
 
-## Step 9: Launch EC2 Instances with Auto Scaling
+## Step 10: Launch EC2 Instances with Auto Scaling
 - Create `userdata.sh`
 ```bash
 nano userdata.sh
@@ -341,7 +377,7 @@ aws autoscaling attach-load-balancer-target-groups \
 
 ---
 
-## Step 10: (Optional) Enable Auto Scaling Policies
+## Step 11: (Optional) Enable Auto Scaling Policies
 - You can set policies for scaling in and out based on CPU usage or other metrics:
 ```bash
 aws autoscaling put-scaling-policy \
@@ -360,7 +396,7 @@ aws autoscaling put-scaling-policy \
 
 ---
 
-## Step 11: Test the Setup
+## Step 12: Test the Setup
 - After launching the setup, you can access the Application Load Balancer's DNS name and ensure it's routing traffic to the instances correctly.
 ```bash
 aws elbv2 describe-load-balancers --names my-load-balancer
