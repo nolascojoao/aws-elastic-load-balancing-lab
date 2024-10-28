@@ -401,3 +401,15 @@ aws autoscaling put-scaling-policy \
 ```bash
 aws elbv2 describe-load-balancers --names my-load-balancer
 ```
+
+<div align="center">
+  <img src="screenshot/12.1.PNG"/>
+</div>
+
+<div align="center">
+  <img src="screenshot/12.2.PNG"/>
+</div>
+
+<div align="center">
+  <img src="screenshot/12.3.PNG"/>
+</div>
